@@ -81,6 +81,40 @@
 
     function lookup($symbol)
     {
+        // NOTE: Yahoo service is no longer available, this is a fake result!
+
+        // instantiate a stock object
+        $stock = new Stock();
+
+        $seed = random_seed_value($symbol . date('h:i'));
+        mt_srand($seed);
+
+        // remember stock's symbol and trades
+        $stock->symbol = $symbol;
+        $stock->name = $symbol;
+        $stock->price = mt_rand(1, 20000) / 100.0;
+        $stock->time = strtotime("now");
+        $stock->open = $stock->price + mt_rand(-100, 100) / 100;
+        $stock->change = $stock->open - $stock->price;
+        $stock->high = $stock->price + mt_rand(0, 1000) / 100;
+        $stock->low = $stock->price - mt_rand(0, 1000) / 100;
+
+        // return stock
+        return $stock;
+    }
+
+    function random_seed_value($data)
+    {
+        $result = 0;
+        for ($i = 0; $i < strlen($data); $i++) 
+        {
+            $result += ord($data[$i]);
+        }
+        return $result;
+    }
+
+    function original_yahoo_lookup($symbol)
+    {
         // reject symbols that start with ^
         if (preg_match("/^\^/", $symbol))
             return NULL;
